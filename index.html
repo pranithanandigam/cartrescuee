@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cart Rescue - Premium E-commerce Store</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+
+<!-- ===== AUTH PAGES ===== -->
+<div id="authContainer" class="auth-container">
+    <!-- Login Page -->
+    <div id="loginPage" class="auth-page active">
+        <div class="auth-box">
+            <div class="auth-header">
+                <i class="fas fa-shopping-cart"></i>
+                <h1>Cart Rescue</h1>
+                <p>Welcome Back!</p>
+            </div>
+            <form id="loginForm" onsubmit="handleLogin(event)">
+                <div class="form-group">
+                    <label for="loginEmail"><i class="fas fa-envelope"></i> Email Address</label>
+                    <input type="email" id="loginEmail" placeholder="Enter your email" required>
+                </div>
+                <div class="form-group">
+                    <label for="loginPassword"><i class="fas fa-lock"></i> Password</label>
+                    <input type="password" id="loginPassword" placeholder="Enter your password" required>
+                </div>
+                <button type="submit" class="auth-btn"><i class="fas fa-sign-in-alt"></i> Sign In</button>
+                <button type="button" class="auth-btn auth-secondary" onclick="startEmailOTPLogin(event)"><i class="fas fa-envelope"></i> Login with Email OTP</button>
+                <div class="auth-links">
+                    <a href="#" onclick="switchToForgotPassword(event)">Forgot Password?</a>
+                </div>
+            </form>
+            <div class="auth-footer">
+                <p>Don't have an account? <a href="#" onclick="switchToSignup(event)">Sign Up</a></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Signup Page -->
+    <div id="signupPage" class="auth-page">
+        <div class="auth-box">
+            <div class="auth-header">
+                <i class="fas fa-shopping-cart"></i>
+                <h1>Cart Rescue</h1>
+                <p>Create Your Account</p>
+            </div>
+            <form id="signupForm" onsubmit="handleSignup(event)">
+                <div class="form-group">
+                    <label for="signupName"><i class="fas fa-user"></i> Full Name</label>
+                    <input type="text" id="signupName" placeholder="Enter your full name" required>
+                </div>
+                <div class="form-group">
+                    <label for="signupEmail"><i class="fas fa-envelope"></i> Email Address</label>
+                    <input type="email" id="signupEmail" placeholder="Enter your email" required>
+                </div>
+                <div class="form-group">
+                    <label for="signupPhone"><i class="fas fa-phone"></i> Phone Number</label>
+                    <input type="tel" id="signupPhone" placeholder="Enter your phone number" required>
+                </div>
+                <div class="form-group">
+                    <label for="signupPassword"><i class="fas fa-lock"></i> Password</label>
+                    <input type="password" id="signupPassword" placeholder="Create a strong password" required>
+                </div>
+                <div class="form-group">
+                    <label for="signupConfirmPassword"><i class="fas fa-lock"></i> Confirm Password</label>
+                    <input type="password" id="signupConfirmPassword" placeholder="Confirm your password" required>
+                </div>
+                <button type="submit" class="auth-btn"><i class="fas fa-user-plus"></i> Create Account</button>
+            </form>
+            <div class="auth-footer">
+                <p>Already have an account? <a href="#" onclick="switchToLogin(event)">Sign In</a></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- OTP Verification Page -->
+    <div id="otpPage" class="auth-page">
+        <div class="auth-box">
+            <div class="auth-header">
+                <i class="fas fa-shield-alt"></i>
+                <h1>Verify OTP</h1>
+                <p>Enter the OTP sent to your email</p>
+            </div>
+            <form id="otpForm" onsubmit="handleOTPVerification(event)">
+                <div class="form-group">
+                    <label for="otpInput"><i class="fas fa-key"></i> OTP Code</label>
+                    <input type="text" id="otpInput" placeholder="Enter 6-digit OTP" maxlength="6" required>
+                    <small id="otpGenerated" style="color: #2563eb; margin-top: 8px; display: block;"></small>
+                </div>
+                <button type="submit" class="auth-btn"><i class="fas fa-check"></i> Verify OTP</button>
+                <div class="auth-links">
+                    <a href="#" onclick="resendOTP(event)">Resend OTP</a>
+                </div>
+            </form>
+            <div class="auth-footer">
+                <p><a href="#" onclick="switchToLogin(event)">Back to Login</a></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Forgot Password Page -->
+    <div id="forgotPasswordPage" class="auth-page">
+        <div class="auth-box">
+            <div class="auth-header">
+                <i class="fas fa-question-circle"></i>
+                <h1>Reset Password</h1>
+                <p>Enter your email to reset password</p>
+            </div>
+            <form id="forgotPasswordForm" onsubmit="handleForgotPassword(event)">
+                <div class="form-group">
+                    <label for="forgotEmail"><i class="fas fa-envelope"></i> Email Address</label>
+                    <input type="email" id="forgotEmail" placeholder="Enter your registered email" required>
+                </div>
+                <button type="submit" class="auth-btn"><i class="fas fa-paper-plane"></i> Send Reset OTP</button>
+            </form>
+            <div class="auth-footer">
+                <p><a href="#" onclick="switchToLogin(event)">Back to Login</a></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Reset Password Page -->
+    <div id="resetPasswordPage" class="auth-page">
+        <div class="auth-box">
+            <div class="auth-header">
+                <i class="fas fa-lock"></i>
+                <h1>Create New Password</h1>
+                <p>Enter your new password</p>
+            </div>
+            <form id="resetPasswordForm" onsubmit="handleResetPassword(event)">
+                <div class="form-group">
+                    <label for="resetOTP"><i class="fas fa-key"></i> OTP Code</label>
+                    <input type="text" id="resetOTP" placeholder="Enter OTP from email" maxlength="6" required>
+                </div>
+                <div class="form-group">
+                    <label for="newPassword"><i class="fas fa-lock"></i> New Password</label>
+                    <input type="password" id="newPassword" placeholder="Enter new password" required>
+                </div>
+                <div class="form-group">
+                    <label for="confirmNewPassword"><i class="fas fa-lock"></i> Confirm Password</label>
+                    <input type="password" id="confirmNewPassword" placeholder="Confirm new password" required>
+                </div>
+                <button type="submit" class="auth-btn"><i class="fas fa-sync-alt"></i> Reset Password</button>
+            </form>
+            <div class="auth-footer">
+                <p><a href="#" onclick="switchToLogin(event)">Back to Login</a></p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ===== MAIN PAGE ===== -->
+<div id="mainPage" class="main-page">
+<header>
+    <div class="header-top">
+        <div class="logo">
+            <i class="fas fa-shopping-cart"></i>
+            <h1>Cart Rescue</h1>
+        </div>
+        <div class="header-middle">
+            <div class="search-bar">
+                <input type="text" id="searchInput" placeholder="Search products..." onkeyup="filterProducts()">
+                <button type="submit"><i class="fas fa-search"></i></button>
+            </div>
+        </div>
+        <div class="header-right">
+            <button class="cart-icon" onclick="toggleCart()">
+                <i class="fas fa-shopping-bag"></i>
+                <span id="cart-count">0</span>
+            </button>
+            <button class="user-profile-btn" onclick="toggleUserMenu()">
+                <i class="fas fa-user-circle"></i>
+                <span id="userName">User</span>
+            </button>
+            <div id="userMenu" class="user-menu">
+                <div class="user-menu-header">
+                    <p id="userMenuName">User Name</p>
+                    <p id="userMenuEmail" style="font-size: 12px; color: #6b7280;"></p>
+                </div>
+                <hr style="margin: 10px 0; border: none; border-top: 1px solid #e5e7eb;">
+                <button class="user-menu-item" onclick="viewProfile()">
+                    <i class="fas fa-user"></i> My Profile
+                </button>
+                <button class="user-menu-item" onclick="viewOrders()">
+                    <i class="fas fa-box"></i> My Orders
+                </button>
+                <button class="user-menu-item" onclick="viewSettings()">
+                    <i class="fas fa-cog"></i> Settings
+                </button>
+                <hr style="margin: 10px 0; border: none; border-top: 1px solid #e5e7eb;">
+                <button class="user-menu-item logout" onclick="handleLogout()">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </button>
+            </div>
+        </div>
+    </div>
+    <nav class="navbar">
+        <button class="category-btn active" onclick="filterByCategory('all')">All</button>
+        <button class="category-btn" onclick="filterByCategory('electronics')">Electronics</button>
+        <button class="category-btn" onclick="filterByCategory('fashion')">Fashion</button>
+        <button class="category-btn" onclick="filterByCategory('accessories')">Accessories</button>
+    </nav>
+</header>
+
+<main class="container">
+    <section class="products" id="productsContainer">
+        <!-- Products will be dynamically loaded here -->
+    </section>
+</main>
+
+<!-- Cart Sidebar -->
+<div id="cartSidebar" class="cart-sidebar">
+    <div class="cart-header">
+        <h2>Shopping Cart</h2>
+        <button class="close-btn" onclick="toggleCart()"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="cart-items" id="cartItems">
+        <p class="empty-cart">Your cart is empty</p>
+    </div>
+    <div class="cart-footer">
+        <div class="cart-summary">
+            <div class="summary-row">
+                <span>Subtotal:</span>
+                <span id="subtotal">₹0</span>
+            </div>
+            <div class="summary-row">
+                <span>Discount (10%):</span>
+                <span id="discount">₹0</span>
+            </div>
+            <div class="summary-row total">
+                <span>Total:</span>
+                <span id="total">₹0</span>
+            </div>
+        </div>
+        <button class="checkout-btn" onclick="checkout()">Checkout</button>
+        <button class="clear-cart-btn" onclick="clearCart()">Clear Cart</button>
+    </div>
+</div>
+
+<div id="cartOverlay" class="cart-overlay" onclick="toggleCart()"></div>
+
+<!-- Discount Popup -->
+<div id="popup" class="popup">
+    <div class="popup-content">
+        <span class="popup-close" onclick="closePopup()"><i class="fas fa-times"></i></span>
+        <div class="popup-emoji">🎉</div>
+        <h3>Wait! Special Offer</h3>
+        <p>Complete your purchase now and get <b>10% OFF</b></p>
+        <p class="popup-subtitle">Apply coupon automatically at checkout</p>
+        <button class="popup-btn" onclick="applyDiscount()">Claim Offer</button>
+    </div>
+</div>
+
+<footer>
+    <div class="footer-content">
+        <div class="footer-section">
+            <h4>About Us</h4>
+            <p>Cart Rescue is your trusted online shopping destination for premium electronics and fashion.</p>
+        </div>
+        <div class="footer-section">
+            <h4>Quick Links</h4>
+            <ul>
+                <li><a href="#">Home</a></li>
+                <li><a href="#">Products</a></li>
+                <li><a href="#">About</a></li>
+                <li><a href="#">Contact</a></li>
+            </ul>
+        </div>
+        <div class="footer-section">
+            <h4>Contact</h4>
+            <p>Email: support@cartrescue.com</p>
+            <p>Phone: 1-800-RESCUE</p>
+            <p>Address: 123 Commerce St, City</p>
+        </div>
+        <div class="footer-section">
+            <h4>Follow Us</h4>
+            <div class="social-links">
+                <a href="#"><i class="fab fa-facebook"></i></a>
+                <a href="#"><i class="fab fa-twitter"></i></a>
+                <a href="#"><i class="fab fa-instagram"></i></a>
+                <a href="#"><i class="fab fa-linkedin"></i></a>
+            </div>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <p>&copy; 2024 Cart Rescue. All rights reserved.</p>
+    </div>
+</footer>
+</div>
+
+<script src="script.js"></script>
+
+</body>
+</html>
