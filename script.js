@@ -1,11 +1,10 @@
-/* =====================================================
-   CART RESCUE JAVASCRIPT
-===================================================== */
+/* =========================================================
+   CART RESCUE
+   COMPLETE JAVASCRIPT
+========================================================= */
 
 
-/* =====================================================
-   PRODUCTS
-===================================================== */
+/* ================= PRODUCTS ================= */
 
 const products = [
 
@@ -16,7 +15,8 @@ const products = [
         price: 2999,
         rating: 4.5,
         reviews: 128,
-        image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e"
+        image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e",
+        optionType: "headphone"
     },
 
     {
@@ -26,7 +26,8 @@ const products = [
         price: 4999,
         rating: 4.7,
         reviews: 95,
-        image: "https://images.unsplash.com/photo-1523275335684-37898b6baf30"
+        image: "https://images.unsplash.com/photo-1523275335684-37898b6baf30",
+        optionType: "watch"
     },
 
     {
@@ -36,7 +37,8 @@ const products = [
         price: 3499,
         rating: 4.6,
         reviews: 156,
-        image: "https://images.unsplash.com/photo-1542291026-7eec264c27ff"
+        image: "https://images.unsplash.com/photo-1542291026-7eec264c27ff",
+        optionType: "shoe"
     },
 
     {
@@ -46,27 +48,30 @@ const products = [
         price: 2899,
         rating: 4.4,
         reviews: 82,
-        image: "https://images.unsplash.com/photo-1552346154-21d32810aba3"
+        image: "https://images.unsplash.com/photo-1552346154-21d32810aba3",
+        optionType: "shoe"
     },
 
     {
         id: 5,
-        name: "USB-C Cable",
-        category: "Accessories",
-        price: 599,
-        rating: 4.3,
-        reviews: 234,
-        image: "https://images.unsplash.com/photo-1583394838336-acd977736f90"
-    },
-
-    {
-        id: 6,
         name: "Phone Case",
         category: "Accessories",
         price: 899,
         rating: 4.5,
         reviews: 167,
-        image: "https://images.unsplash.com/photo-1601593346740-925612772716"
+        image: "https://images.unsplash.com/photo-1601593346740-925612772716",
+        optionType: "phone"
+    },
+
+    {
+        id: 6,
+        name: "Laptop Backpack",
+        category: "Accessories",
+        price: 1799,
+        rating: 4.4,
+        reviews: 91,
+        image: "https://images.unsplash.com/photo-1553062407-98eeb64c6a62",
+        optionType: "laptop"
     },
 
     {
@@ -76,17 +81,19 @@ const products = [
         price: 1499,
         rating: 4.6,
         reviews: 112,
-        image: "https://images.unsplash.com/photo-1527814050087-3793815479db"
+        image: "https://images.unsplash.com/photo-1527814050087-3793815479db",
+        optionType: "none"
     },
 
     {
         id: 8,
-        name: "Laptop Backpack",
+        name: "USB-C Cable",
         category: "Accessories",
-        price: 1799,
-        rating: 4.4,
-        reviews: 91,
-        image: "https://images.unsplash.com/photo-1553062407-98eeb64c6a62"
+        price: 599,
+        rating: 4.3,
+        reviews: 234,
+        image: "https://images.unsplash.com/photo-1583394838336-acd977736f90",
+        optionType: "none"
     }
 
 ];
@@ -97,15 +104,654 @@ let cart = [];
 let currentCategory = "All";
 
 
+/* =========================================================
+   LOGIN
+========================================================= */
 
-/* =====================================================
+function login() {
+
+    const username =
+        document.getElementById("loginUsername")
+        .value.trim();
+
+    const password =
+        document.getElementById("loginPassword")
+        .value.trim();
+
+
+    if (username === "admin" && password === "1234") {
+
+        localStorage.setItem(
+            "cartRescueLoggedIn",
+            "true"
+        );
+
+        localStorage.setItem(
+            "cartRescueUsername",
+            username
+        );
+
+
+        showShop(username);
+
+    }
+
+    else {
+
+        document.getElementById(
+            "loginError"
+        ).innerText =
+            "Invalid username or password.";
+
+    }
+
+}
+
+
+/* =========================================================
+   SHOW SHOP
+========================================================= */
+
+function showShop(username) {
+
+    document.getElementById(
+        "loginPage"
+    ).classList.add("hidden");
+
+
+    document.getElementById(
+        "shopPage"
+    ).classList.remove("hidden");
+
+
+    document.getElementById(
+        "usernameDisplay"
+    ).innerText = username;
+
+
+    document.getElementById(
+        "profileName"
+    ).innerText = username;
+
+
+    displayProducts();
+
+    updateCart();
+
+}
+
+
+/* =========================================================
+   LOGOUT
+========================================================= */
+
+function logout() {
+
+    const confirmLogout =
+        confirm(
+            "Are you sure you want to logout?"
+        );
+
+
+    if (!confirmLogout) {
+        return;
+    }
+
+
+    /* Remove login session */
+
+    localStorage.removeItem(
+        "cartRescueLoggedIn"
+    );
+
+    localStorage.removeItem(
+        "cartRescueUsername"
+    );
+
+
+    /* Empty current cart */
+
+    cart = [];
+
+
+    /* Close profile */
+
+    document.getElementById(
+        "profileMenu"
+    ).classList.remove("show");
+
+
+    /* Close cart */
+
+    closeCart();
+
+
+    /* Hide shop */
+
+    document.getElementById(
+        "shopPage"
+    ).classList.add("hidden");
+
+
+    /* Show login */
+
+    document.getElementById(
+        "loginPage"
+    ).classList.remove("hidden");
+
+
+    /* Clear login fields */
+
+    document.getElementById(
+        "loginUsername"
+    ).value = "";
+
+    document.getElementById(
+        "loginPassword"
+    ).value = "";
+
+
+    document.getElementById(
+        "loginError"
+    ).innerText = "";
+
+}
+
+
+/* =========================================================
+   CHECK LOGIN WHEN PAGE OPENS
+========================================================= */
+
+function checkLogin() {
+
+    const loggedIn =
+        localStorage.getItem(
+            "cartRescueLoggedIn"
+        );
+
+
+    const username =
+        localStorage.getItem(
+            "cartRescueUsername"
+        );
+
+
+    if (
+        loggedIn === "true" &&
+        username
+    ) {
+
+        showShop(username);
+
+    }
+
+    else {
+
+        document.getElementById(
+            "loginPage"
+        ).classList.remove("hidden");
+
+
+        document.getElementById(
+            "shopPage"
+        ).classList.add("hidden");
+
+    }
+
+}
+
+
+/* =========================================================
+   PRODUCT OPTIONS
+========================================================= */
+
+function getOptions(product) {
+
+
+    /* SHOES */
+
+    if (product.optionType === "shoe") {
+
+        return `
+
+            <div class="product-options">
+
+                <div class="option-group">
+
+                    <label>
+                        👟 Select Shoe Size
+                    </label>
+
+                    <select
+                        id="option-${product.id}">
+
+                        <option value="">
+                            Choose Size
+                        </option>
+
+                        <option value="Size 6">
+                            Size 6
+                        </option>
+
+                        <option value="Size 7">
+                            Size 7
+                        </option>
+
+                        <option value="Size 8">
+                            Size 8
+                        </option>
+
+                        <option value="Size 9">
+                            Size 9
+                        </option>
+
+                        <option value="Size 10">
+                            Size 10
+                        </option>
+
+                        <option value="Size 11">
+                            Size 11
+                        </option>
+
+                        <option value="Size 12">
+                            Size 12
+                        </option>
+
+                    </select>
+
+                </div>
+
+            </div>
+
+        `;
+
+    }
+
+
+    /* PHONE CASE */
+
+    if (product.optionType === "phone") {
+
+        return `
+
+            <div class="product-options">
+
+                <div class="option-group">
+
+                    <label>
+                        📱 Phone Brand
+                    </label>
+
+                    <select
+                        id="brand-${product.id}">
+
+                        <option value="">
+                            Select Brand
+                        </option>
+
+                        <option value="Apple">
+                            Apple
+                        </option>
+
+                        <option value="Samsung">
+                            Samsung
+                        </option>
+
+                        <option value="OnePlus">
+                            OnePlus
+                        </option>
+
+                        <option value="Google Pixel">
+                            Google Pixel
+                        </option>
+
+                        <option value="Vivo">
+                            Vivo
+                        </option>
+
+                        <option value="Oppo">
+                            Oppo
+                        </option>
+
+                        <option value="Realme">
+                            Realme
+                        </option>
+
+                        <option value="Motorola">
+                            Motorola
+                        </option>
+
+                        <option value="Nothing">
+                            Nothing
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <div class="option-group">
+
+                    <label>
+                        📱 Phone Model
+                    </label>
+
+                    <select
+                        id="model-${product.id}">
+
+                        <option value="">
+                            Select Model
+                        </option>
+
+                        <option>
+                            iPhone 15
+                        </option>
+
+                        <option>
+                            iPhone 16
+                        </option>
+
+                        <option>
+                            iPhone 16 Pro
+                        </option>
+
+                        <option>
+                            Galaxy S24
+                        </option>
+
+                        <option>
+                            Galaxy S25
+                        </option>
+
+                        <option>
+                            OnePlus 12
+                        </option>
+
+                        <option>
+                            OnePlus 13
+                        </option>
+
+                        <option>
+                            Pixel 9
+                        </option>
+
+                        <option>
+                            Vivo V40
+                        </option>
+
+                        <option>
+                            Oppo Reno 12
+                        </option>
+
+                        <option>
+                            Realme GT
+                        </option>
+
+                    </select>
+
+                </div>
+
+            </div>
+
+        `;
+
+    }
+
+
+    /* LAPTOP */
+
+    if (product.optionType === "laptop") {
+
+        return `
+
+            <div class="product-options">
+
+                <div class="option-group">
+
+                    <label>
+                        💻 Laptop Brand
+                    </label>
+
+                    <select
+                        id="brand-${product.id}">
+
+                        <option value="">
+                            Select Brand
+                        </option>
+
+                        <option>
+                            HP
+                        </option>
+
+                        <option>
+                            Dell
+                        </option>
+
+                        <option>
+                            Lenovo
+                        </option>
+
+                        <option>
+                            ASUS
+                        </option>
+
+                        <option>
+                            Acer
+                        </option>
+
+                        <option>
+                            Apple
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <div class="option-group">
+
+                    <label>
+                        💻 Laptop Model
+                    </label>
+
+                    <select
+                        id="model-${product.id}">
+
+                        <option value="">
+                            Select Model
+                        </option>
+
+                        <option>
+                            HP Pavilion
+                        </option>
+
+                        <option>
+                            HP Victus
+                        </option>
+
+                        <option>
+                            Dell Inspiron
+                        </option>
+
+                        <option>
+                            Dell XPS
+                        </option>
+
+                        <option>
+                            Lenovo IdeaPad
+                        </option>
+
+                        <option>
+                            Lenovo ThinkPad
+                        </option>
+
+                        <option>
+                            ASUS VivoBook
+                        </option>
+
+                        <option>
+                            ASUS ROG
+                        </option>
+
+                        <option>
+                            Acer Aspire
+                        </option>
+
+                        <option>
+                            MacBook Air
+                        </option>
+
+                        <option>
+                            MacBook Pro
+                        </option>
+
+                    </select>
+
+                </div>
+
+            </div>
+
+        `;
+
+    }
+
+
+    /* SMART WATCH */
+
+    if (product.optionType === "watch") {
+
+        return `
+
+            <div class="product-options">
+
+                <div class="option-group">
+
+                    <label>
+                        ⌚ Smart Watch Type
+                    </label>
+
+                    <select
+                        id="option-${product.id}">
+
+                        <option value="">
+                            Choose Type
+                        </option>
+
+                        <option>
+                            Fitness Tracker
+                        </option>
+
+                        <option>
+                            Sports Watch
+                        </option>
+
+                        <option>
+                            GPS Smart Watch
+                        </option>
+
+                        <option>
+                            Health Monitoring Watch
+                        </option>
+
+                        <option>
+                            Premium Smart Watch
+                        </option>
+
+                        <option>
+                            Kids Smart Watch
+                        </option>
+
+                    </select>
+
+                </div>
+
+            </div>
+
+        `;
+
+    }
+
+
+    /* HEADPHONES */
+
+    if (product.optionType === "headphone") {
+
+        return `
+
+            <div class="product-options">
+
+                <div class="option-group">
+
+                    <label>
+                        🎧 Headphone Model
+                    </label>
+
+                    <select
+                        id="option-${product.id}">
+
+                        <option value="">
+                            Choose Model
+                        </option>
+
+                        <option>
+                            Wireless Over-Ear
+                        </option>
+
+                        <option>
+                            Wireless On-Ear
+                        </option>
+
+                        <option>
+                            Noise Cancelling
+                        </option>
+
+                        <option>
+                            Bluetooth Headphones
+                        </option>
+
+                        <option>
+                            Gaming Headset
+                        </option>
+
+                        <option>
+                            Sports Headphones
+                        </option>
+
+                        <option>
+                            Studio Headphones
+                        </option>
+
+                        <option>
+                            Neckband
+                        </option>
+
+                    </select>
+
+                </div>
+
+            </div>
+
+        `;
+
+    }
+
+
+    return "";
+
+}
+
+
+/* =========================================================
    DISPLAY PRODUCTS
-===================================================== */
+========================================================= */
 
 function displayProducts(list = products) {
 
     const grid =
-        document.getElementById("productGrid");
+        document.getElementById(
+            "productGrid"
+        );
+
 
     grid.innerHTML = "";
 
@@ -113,13 +759,23 @@ function displayProducts(list = products) {
     if (list.length === 0) {
 
         grid.innerHTML = `
+
             <div class="empty-cart">
-                <h2>No products found</h2>
-                <p>Try another search.</p>
+
+                <h2>
+                    No products found
+                </h2>
+
+                <p>
+                    Try another search.
+                </p>
+
             </div>
+
         `;
 
         return;
+
     }
 
 
@@ -128,7 +784,9 @@ function displayProducts(list = products) {
         const card =
             document.createElement("div");
 
-        card.className = "product-card";
+
+        card.className =
+            "product-card";
 
 
         card.innerHTML = `
@@ -172,6 +830,9 @@ function displayProducts(list = products) {
                 </div>
 
 
+                ${getOptions(product)}
+
+
                 <button
                     class="add-cart"
                     onclick="addToCart(${product.id})">
@@ -183,6 +844,7 @@ function displayProducts(list = products) {
                 </button>
 
             </div>
+
         `;
 
 
@@ -193,98 +855,135 @@ function displayProducts(list = products) {
 }
 
 
+/* =========================================================
+   GET OPTION
+========================================================= */
 
-/* =====================================================
-   SEARCH
-===================================================== */
-
-function searchProducts() {
-
-    const search =
-        document
-        .getElementById("searchInput")
-        .value
-        .toLowerCase();
+function getSelectedOption(product) {
 
 
-    let result =
-        products.filter(product => {
+    if (product.optionType === "none") {
 
-            const matchesSearch =
-                product.name
-                    .toLowerCase()
-                    .includes(search);
+        return "Standard";
+
+    }
 
 
-            const matchesCategory =
-                currentCategory === "All" ||
-                product.category === currentCategory;
+    if (
+        product.optionType === "shoe" ||
+        product.optionType === "watch" ||
+        product.optionType === "headphone"
+    ) {
+
+        const select =
+            document.getElementById(
+                `option-${product.id}`
+            );
 
 
-            return matchesSearch &&
-                   matchesCategory;
+        if (!select || !select.value) {
 
-        });
+            return null;
+
+        }
 
 
-    displayProducts(result);
+        return select.value;
+
+    }
+
+
+    if (
+        product.optionType === "phone" ||
+        product.optionType === "laptop"
+    ) {
+
+        const brand =
+            document.getElementById(
+                `brand-${product.id}`
+            );
+
+
+        const model =
+            document.getElementById(
+                `model-${product.id}`
+            );
+
+
+        if (
+            !brand ||
+            !model ||
+            !brand.value ||
+            !model.value
+        ) {
+
+            return null;
+
+        }
+
+
+        return brand.value +
+            " - " +
+            model.value;
+
+    }
+
+
+    return "Standard";
 
 }
 
 
-
-/* =====================================================
-   CATEGORY FILTER
-===================================================== */
-
-function filterCategory(category, button) {
-
-    currentCategory = category;
-
-
-    document
-        .querySelectorAll(".category")
-        .forEach(btn => {
-
-            btn.classList.remove("active");
-
-        });
-
-
-    button.classList.add("active");
-
-
-    searchProducts();
-
-}
-
-
-
-/* =====================================================
+/* =========================================================
    ADD TO CART
-===================================================== */
+========================================================= */
 
 function addToCart(id) {
 
     const product =
-        products.find(p => p.id === id);
+        products.find(
+            p => p.id === id
+        );
+
+
+    const option =
+        getSelectedOption(product);
+
+
+    if (!option) {
+
+        alert(
+            "Please select the required product option."
+        );
+
+        return;
+
+    }
 
 
     const existing =
-        cart.find(item => item.id === id);
+        cart.find(
+            item =>
+                item.id === id &&
+                item.selectedOption === option
+        );
 
 
     if (existing) {
 
         existing.quantity++;
 
-    } else {
+    }
+
+    else {
 
         cart.push({
 
             ...product,
 
-            quantity: 1
+            quantity: 1,
+
+            selectedOption: option
 
         });
 
@@ -293,45 +992,24 @@ function addToCart(id) {
 
     updateCart();
 
-
     openCart();
 
 }
 
 
-
-/* =====================================================
+/* =========================================================
    UPDATE CART
-===================================================== */
+========================================================= */
 
 function updateCart() {
 
-    const cartItems =
-        document.getElementById("cartItems");
+    const container =
+        document.getElementById(
+            "cartItems"
+        );
 
 
-    cartItems.innerHTML = "";
-
-
-    if (cart.length === 0) {
-
-        cartItems.innerHTML = `
-
-            <div class="empty-cart">
-
-                <i
-                    class="fa-solid fa-cart-shopping"
-                    style="font-size:50px">
-                </i>
-
-                <h3>Your cart is empty</h3>
-
-                <p>Add some products to continue.</p>
-
-            </div>
-        `;
-
-    }
+    container.innerHTML = "";
 
 
     let subtotal = 0;
@@ -339,10 +1017,37 @@ function updateCart() {
     let count = 0;
 
 
-    cart.forEach(item => {
+    if (cart.length === 0) {
+
+        container.innerHTML = `
+
+            <div class="empty-cart">
+
+                <i class="fa-solid fa-cart-shopping"
+                   style="font-size:45px">
+                </i>
+
+                <h3>
+                    Your cart is empty
+                </h3>
+
+                <p>
+                    Add products to continue.
+                </p>
+
+            </div>
+
+        `;
+
+    }
+
+
+    cart.forEach((item,index) => {
 
         subtotal +=
-            item.price * item.quantity;
+            item.price *
+            item.quantity;
+
 
         count += item.quantity;
 
@@ -350,7 +1055,9 @@ function updateCart() {
         const div =
             document.createElement("div");
 
-        div.className = "cart-item";
+
+        div.className =
+            "cart-item";
 
 
         div.innerHTML = `
@@ -367,6 +1074,17 @@ function updateCart() {
                 </h4>
 
 
+                <div class="cart-option">
+
+                    Selected:
+
+                    <strong>
+                        ${item.selectedOption}
+                    </strong>
+
+                </div>
+
+
                 <div class="cart-item-price">
 
                     ₹${item.price.toLocaleString("en-IN")}
@@ -377,23 +1095,17 @@ function updateCart() {
                 <div class="quantity">
 
                     <button
-                        onclick="changeQuantity(${item.id}, -1)">
-
+                        onclick="changeQuantity(${index}, -1)">
                         −
-
                     </button>
-
 
                     <span>
                         ${item.quantity}
                     </span>
 
-
                     <button
-                        onclick="changeQuantity(${item.id}, 1)">
-
+                        onclick="changeQuantity(${index}, 1)">
                         +
-
                     </button>
 
                 </div>
@@ -403,15 +1115,16 @@ function updateCart() {
 
             <button
                 class="delete-btn"
-                onclick="removeFromCart(${item.id})">
+                onclick="removeFromCart(${index})">
 
                 <i class="fa-solid fa-trash"></i>
 
             </button>
+
         `;
 
 
-        cartItems.appendChild(div);
+        container.appendChild(div);
 
     });
 
@@ -424,45 +1137,46 @@ function updateCart() {
         subtotal - discount;
 
 
-    document.getElementById("cartCount")
-        .innerText = count;
+    document.getElementById(
+        "cartCount"
+    ).innerText = count;
 
 
-    document.getElementById("subtotal")
-        .innerText = formatMoney(subtotal);
+    document.getElementById(
+        "subtotal"
+    ).innerText =
+        formatMoney(subtotal);
 
 
-    document.getElementById("discount")
-        .innerText = formatMoney(discount);
+    document.getElementById(
+        "discount"
+    ).innerText =
+        formatMoney(discount);
 
 
-    document.getElementById("total")
-        .innerText = formatMoney(total);
+    document.getElementById(
+        "total"
+    ).innerText =
+        formatMoney(total);
 
 }
 
 
-
-/* =====================================================
+/* =========================================================
    QUANTITY
-===================================================== */
+========================================================= */
 
-function changeQuantity(id, amount) {
+function changeQuantity(index, amount) {
 
-    const item =
-        cart.find(item => item.id === id);
-
-
-    if (!item) return;
+    if (!cart[index]) return;
 
 
-    item.quantity += amount;
+    cart[index].quantity += amount;
 
 
-    if (item.quantity <= 0) {
+    if (cart[index].quantity <= 0) {
 
-        cart =
-            cart.filter(item => item.id !== id);
+        cart.splice(index,1);
 
     }
 
@@ -472,32 +1186,28 @@ function changeQuantity(id, amount) {
 }
 
 
-
-/* =====================================================
+/* =========================================================
    REMOVE
-===================================================== */
+========================================================= */
 
-function removeFromCart(id) {
+function removeFromCart(index) {
 
-    cart =
-        cart.filter(item => item.id !== id);
-
+    cart.splice(index,1);
 
     updateCart();
 
 }
 
 
-
-/* =====================================================
+/* =========================================================
    CLEAR CART
-===================================================== */
+========================================================= */
 
 function clearCart() {
 
     if (cart.length === 0) {
 
-        alert("Cart is already empty.");
+        alert("Your cart is already empty.");
 
         return;
 
@@ -505,7 +1215,9 @@ function clearCart() {
 
 
     if (
-        confirm("Are you sure you want to clear the cart?")
+        confirm(
+            "Are you sure you want to clear the cart?"
+        )
     ) {
 
         cart = [];
@@ -517,49 +1229,134 @@ function clearCart() {
 }
 
 
-
-/* =====================================================
-   CART OPEN / CLOSE
-===================================================== */
+/* =========================================================
+   CART OPEN/CLOSE
+========================================================= */
 
 function openCart() {
 
-    document
-        .getElementById("cartSidebar")
-        .classList.add("open");
+    document.getElementById(
+        "cartSidebar"
+    ).classList.add("open");
 
 
-    document
-        .getElementById("cartOverlay")
-        .classList.add("show");
+    document.getElementById(
+        "cartOverlay"
+    ).classList.add("show");
 
 }
 
 
 function closeCart() {
 
-    document
-        .getElementById("cartSidebar")
-        .classList.remove("open");
+    document.getElementById(
+        "cartSidebar"
+    ).classList.remove("open");
 
 
-    document
-        .getElementById("cartOverlay")
-        .classList.remove("show");
+    document.getElementById(
+        "cartOverlay"
+    ).classList.remove("show");
 
 }
 
 
+/* =========================================================
+   SEARCH
+========================================================= */
 
-/* =====================================================
+function searchProducts() {
+
+    const search =
+        document.getElementById(
+            "searchInput"
+        ).value
+        .toLowerCase();
+
+
+    const filtered =
+        products.filter(product => {
+
+            const matchesSearch =
+                product.name
+                    .toLowerCase()
+                    .includes(search);
+
+
+            const matchesCategory =
+                currentCategory === "All" ||
+                product.category ===
+                currentCategory;
+
+
+            return (
+                matchesSearch &&
+                matchesCategory
+            );
+
+        });
+
+
+    displayProducts(filtered);
+
+}
+
+
+/* =========================================================
+   CATEGORY
+========================================================= */
+
+function filterCategory(category, button) {
+
+    currentCategory =
+        category;
+
+
+    document
+        .querySelectorAll(".category")
+        .forEach(btn => {
+
+            btn.classList.remove(
+                "active"
+            );
+
+        });
+
+
+    button.classList.add(
+        "active"
+    );
+
+
+    searchProducts();
+
+}
+
+
+/* =========================================================
+   PROFILE
+========================================================= */
+
+function toggleProfile() {
+
+    document.getElementById(
+        "profileMenu"
+    ).classList.toggle("show");
+
+}
+
+
+/* =========================================================
    CHECKOUT
-===================================================== */
+========================================================= */
 
 function startCheckout() {
 
     if (cart.length === 0) {
 
-        alert("Please add a product to your cart first.");
+        alert(
+            "Please add a product to the cart first."
+        );
 
         return;
 
@@ -568,33 +1365,30 @@ function startCheckout() {
 
     closeCart();
 
-
     loadSavedAddress();
-
 
     updateCheckoutTotal();
 
 
-    document
-        .getElementById("checkoutModal")
-        .style.display = "block";
+    document.getElementById(
+        "checkoutModal"
+    ).style.display = "block";
 
 }
 
 
 function closeCheckout() {
 
-    document
-        .getElementById("checkoutModal")
-        .style.display = "none";
+    document.getElementById(
+        "checkoutModal"
+    ).style.display = "none";
 
 }
 
 
-
-/* =====================================================
+/* =========================================================
    CHECKOUT TOTAL
-===================================================== */
+========================================================= */
 
 function updateCheckoutTotal() {
 
@@ -604,7 +1398,8 @@ function updateCheckoutTotal() {
     cart.forEach(item => {
 
         subtotal +=
-            item.price * item.quantity;
+            item.price *
+            item.quantity;
 
     });
 
@@ -621,7 +1416,9 @@ function updateCheckoutTotal() {
 
     const deliveryCharge =
         delivery
-            ? Number(delivery.dataset.charge)
+            ? Number(
+                delivery.dataset.charge
+            )
             : 0;
 
 
@@ -648,7 +1445,9 @@ function updateCheckoutTotal() {
     ).innerText =
         deliveryCharge === 0
             ? "FREE"
-            : formatMoney(deliveryCharge);
+            : formatMoney(
+                deliveryCharge
+            );
 
 
     document.getElementById(
@@ -659,83 +1458,72 @@ function updateCheckoutTotal() {
 }
 
 
-
-/* =====================================================
-   CONFIRM ORDER
-===================================================== */
+/* =========================================================
+   PLACE ORDER
+========================================================= */
 
 function confirmOrder() {
 
     const name =
-        document
-        .getElementById("fullName")
-        .value
-        .trim();
+        document.getElementById(
+            "fullName"
+        ).value.trim();
 
 
     const phone =
-        document
-        .getElementById("phone")
-        .value
-        .trim();
+        document.getElementById(
+            "phone"
+        ).value.trim();
 
 
     const door =
-        document
-        .getElementById("doorNo")
-        .value
-        .trim();
+        document.getElementById(
+            "doorNo"
+        ).value.trim();
 
 
     const street =
-        document
-        .getElementById("street")
-        .value
-        .trim();
+        document.getElementById(
+            "street"
+        ).value.trim();
 
 
     const city =
-        document
-        .getElementById("city")
-        .value
-        .trim();
+        document.getElementById(
+            "city"
+        ).value.trim();
 
 
     const state =
-        document
-        .getElementById("state")
-        .value
-        .trim();
+        document.getElementById(
+            "state"
+        ).value.trim();
 
 
     const pincode =
-        document
-        .getElementById("pincode")
-        .value
-        .trim();
+        document.getElementById(
+            "pincode"
+        ).value.trim();
 
 
     const landmark =
-        document
-        .getElementById("landmark")
-        .value
-        .trim();
+        document.getElementById(
+            "landmark"
+        ).value.trim();
 
-
-    /* REQUIRED FIELD CHECK */
 
     if (
-        name === "" ||
-        phone === "" ||
-        door === "" ||
-        street === "" ||
-        city === "" ||
-        state === "" ||
-        pincode === ""
+        !name ||
+        !phone ||
+        !door ||
+        !street ||
+        !city ||
+        !state ||
+        !pincode
     ) {
 
         alert(
-            "Please fill all required delivery details."
+            "Please fill all required address fields."
         );
 
         return;
@@ -743,9 +1531,9 @@ function confirmOrder() {
     }
 
 
-    /* PHONE */
-
-    if (!/^[0-9]{10}$/.test(phone)) {
+    if (
+        !/^[0-9]{10}$/.test(phone)
+    ) {
 
         alert(
             "Please enter a valid 10-digit phone number."
@@ -756,9 +1544,9 @@ function confirmOrder() {
     }
 
 
-    /* PIN */
-
-    if (!/^[0-9]{6}$/.test(pincode)) {
+    if (
+        !/^[0-9]{6}$/.test(pincode)
+    ) {
 
         alert(
             "Please enter a valid 6-digit PIN code."
@@ -793,19 +1581,23 @@ function confirmOrder() {
         ).innerText;
 
 
-    /* ADDRESS TEXT */
-
-    const addressText =
-        name + "\n" +
-        "Door No: " + door + "\n" +
-        street + "\n" +
-        city + ", " +
-        state + " - " +
-        pincode + "\n" +
-        "Phone: " + phone + "\n" +
-        "Landmark: " +
-        (landmark || "Not provided") + "\n" +
-        "Address Type: " +
+    const address =
+        name +
+        "\nDoor No: " +
+        door +
+        "\n" +
+        street +
+        "\n" +
+        city +
+        ", " +
+        state +
+        " - " +
+        pincode +
+        "\nPhone: " +
+        phone +
+        "\nLandmark: " +
+        (landmark || "Not provided") +
+        "\nAddress Type: " +
         addressType;
 
 
@@ -813,18 +1605,27 @@ function confirmOrder() {
 
     localStorage.setItem(
         "cartRescueAddress",
-        addressText
+        address
     );
 
 
-    /* ORDER ID */
+    /* CREATE ORDER ID */
 
     const orderId =
         "CR-" +
-        Date.now()
-        .toString()
-        .slice(-8);
+        Math.floor(
+            10000000 +
+            Math.random() * 90000000
+        );
 
+
+    const expectedDate =
+        getExpectedDate(
+            delivery
+        );
+
+
+    /* SAVE ORDER */
 
     localStorage.setItem(
         "cartRescueOrderId",
@@ -835,6 +1636,18 @@ function confirmOrder() {
     localStorage.setItem(
         "cartRescueOrderTotal",
         total
+    );
+
+
+    localStorage.setItem(
+        "cartRescueExpectedDate",
+        expectedDate
+    );
+
+
+    localStorage.setItem(
+        "cartRescueOrderAddress",
+        address
     );
 
 
@@ -850,19 +1663,7 @@ function confirmOrder() {
     );
 
 
-    /* EXPECTED DATE */
-
-    const expectedDate =
-        getExpectedDate(delivery);
-
-
-    localStorage.setItem(
-        "cartRescueExpectedDate",
-        expectedDate
-    );
-
-
-    /* UPDATE SUCCESS MODAL */
+    /* SUCCESS PAGE */
 
     document.getElementById(
         "orderId"
@@ -885,53 +1686,11 @@ function confirmOrder() {
     document.getElementById(
         "successAddress"
     ).innerText =
-        addressText;
+        address;
 
-
-    /* UPDATE TRACKING */
-
-    document.getElementById(
-        "trackingOrderId"
-    ).innerText =
-        "Order #" + orderId;
-
-
-    document.getElementById(
-        "trackingAmount"
-    ).innerText =
-        total;
-
-
-    document.getElementById(
-        "trackingAddress"
-    ).innerText =
-        addressText;
-
-
-    document.getElementById(
-        "trackingDate"
-    ).innerText =
-        expectedDate;
-
-
-    let productName =
-        cart.length > 0
-            ? cart[0].name
-            : "Your Order";
-
-
-    document.getElementById(
-        "trackingProduct"
-    ).innerText =
-        productName;
-
-
-    /* CLOSE CHECKOUT */
 
     closeCheckout();
 
-
-    /* SHOW SUCCESS */
 
     document.getElementById(
         "successModal"
@@ -939,7 +1698,7 @@ function confirmOrder() {
         "block";
 
 
-    /* Keep cart for moment then clear */
+    /* EMPTY CART */
 
     cart = [];
 
@@ -948,10 +1707,9 @@ function confirmOrder() {
 }
 
 
-
-/* =====================================================
-   EXPECTED DATE
-===================================================== */
+/* =========================================================
+   EXPECTED DELIVERY DATE
+========================================================= */
 
 function getExpectedDate(delivery) {
 
@@ -959,7 +1717,10 @@ function getExpectedDate(delivery) {
         new Date();
 
 
-    if (delivery === "Same Day Delivery") {
+    if (
+        delivery ===
+        "Same Day Delivery"
+    ) {
 
         date.setDate(
             date.getDate()
@@ -967,7 +1728,10 @@ function getExpectedDate(delivery) {
 
     }
 
-    else if (delivery === "Express Delivery") {
+    else if (
+        delivery ===
+        "Express Delivery"
+    ) {
 
         date.setDate(
             date.getDate() + 2
@@ -996,10 +1760,9 @@ function getExpectedDate(delivery) {
 }
 
 
-
-/* =====================================================
-   CLOSE SUCCESS
-===================================================== */
+/* =========================================================
+   SUCCESS
+========================================================= */
 
 function closeSuccess() {
 
@@ -1011,34 +1774,20 @@ function closeSuccess() {
 }
 
 
-
-/* =====================================================
+/* =========================================================
    TRACKING
-===================================================== */
+========================================================= */
 
 function openTracking() {
+
+    document.getElementById(
+        "profileMenu"
+    ).classList.remove("show");
+
 
     const orderId =
         localStorage.getItem(
             "cartRescueOrderId"
-        );
-
-
-    const total =
-        localStorage.getItem(
-            "cartRescueOrderTotal"
-        );
-
-
-    const address =
-        localStorage.getItem(
-            "cartRescueAddress"
-        );
-
-
-    const expectedDate =
-        localStorage.getItem(
-            "cartRescueExpectedDate"
         );
 
 
@@ -1062,19 +1811,31 @@ function openTracking() {
     document.getElementById(
         "trackingAmount"
     ).innerText =
-        total || "₹0";
+        localStorage.getItem(
+            "cartRescueOrderTotal"
+        ) || "₹0";
 
 
     document.getElementById(
         "trackingAddress"
     ).innerText =
-        address || "No address saved.";
+        localStorage.getItem(
+            "cartRescueOrderAddress"
+        ) || "No address saved.";
 
 
     document.getElementById(
         "trackingDate"
     ).innerText =
-        expectedDate || "--";
+        localStorage.getItem(
+            "cartRescueExpectedDate"
+        ) || "-";
+
+
+    document.getElementById(
+        "trackingProduct"
+    ).innerText =
+        "Cart Rescue Order";
 
 
     document.getElementById(
@@ -1095,16 +1856,32 @@ function closeTracking() {
 }
 
 
-
-/* =====================================================
+/* =========================================================
    SAVED ADDRESS
-===================================================== */
+========================================================= */
 
-function openAddress() {
+function openSavedAddress() {
 
     document.getElementById(
         "profileMenu"
     ).classList.remove("show");
+
+
+    const saved =
+        localStorage.getItem(
+            "cartRescueAddress"
+        );
+
+
+    if (!saved) {
+
+        alert(
+            "No saved address found. Please enter your address during checkout."
+        );
+
+        return;
+
+    }
 
 
     loadSavedAddress();
@@ -1118,6 +1895,10 @@ function openAddress() {
 }
 
 
+/* =========================================================
+   LOAD SAVED ADDRESS
+========================================================= */
+
 function loadSavedAddress() {
 
     const saved =
@@ -1126,14 +1907,16 @@ function loadSavedAddress() {
         );
 
 
-    if (!saved) return;
+    if (!saved) {
+        return;
+    }
 
 
     const lines =
         saved.split("\n");
 
 
-    if (lines.length >= 1) {
+    if (lines[0]) {
 
         document.getElementById(
             "fullName"
@@ -1143,18 +1926,21 @@ function loadSavedAddress() {
     }
 
 
-    if (lines.length >= 2) {
+    if (lines[1]) {
 
         document.getElementById(
             "doorNo"
         ).value =
             lines[1]
-                .replace("Door No: ", "");
+                .replace(
+                    "Door No: ",
+                    ""
+                );
 
     }
 
 
-    if (lines.length >= 3) {
+    if (lines[2]) {
 
         document.getElementById(
             "street"
@@ -1164,7 +1950,7 @@ function loadSavedAddress() {
     }
 
 
-    if (lines.length >= 4) {
+    if (lines[3]) {
 
         const parts =
             lines[3].split(",");
@@ -1202,49 +1988,43 @@ function loadSavedAddress() {
     }
 
 
-    if (lines.length >= 5) {
+    if (lines[4]) {
 
         document.getElementById(
             "phone"
         ).value =
             lines[4]
-                .replace("Phone: ", "");
+                .replace(
+                    "Phone: ",
+                    ""
+                );
 
     }
 
 
-    if (lines.length >= 6) {
+    if (lines[5]) {
 
         document.getElementById(
             "landmark"
         ).value =
             lines[5]
-                .replace("Landmark: ", "")
-                .replace("Not provided", "");
+                .replace(
+                    "Landmark: ",
+                    ""
+                )
+                .replace(
+                    "Not provided",
+                    ""
+                );
 
     }
 
 }
 
 
-
-/* =====================================================
-   PROFILE
-===================================================== */
-
-function toggleProfile() {
-
-    document
-        .getElementById("profileMenu")
-        .classList.toggle("show");
-
-}
-
-
-
-/* =====================================================
+/* =========================================================
    FORMAT MONEY
-===================================================== */
+========================================================= */
 
 function formatMoney(amount) {
 
@@ -1255,30 +2035,54 @@ function formatMoney(amount) {
 }
 
 
-
-/* =====================================================
+/* =========================================================
    CLOSE MODALS WHEN CLICKING OUTSIDE
-===================================================== */
+========================================================= */
 
-window.onclick = function(event) {
+window.addEventListener(
+    "click",
+    function(event) {
 
-    if (
-        event.target.classList.contains("modal")
-    ) {
+        if (
+            event.target.classList.contains(
+                "modal"
+            )
+        ) {
 
-        event.target.style.display =
-            "none";
+            event.target.style.display =
+                "none";
+
+        }
 
     }
-
-}
-
+);
 
 
-/* =====================================================
-   INITIAL LOAD
-===================================================== */
+/* =========================================================
+   ENTER KEY LOGIN
+========================================================= */
 
-displayProducts();
+document.addEventListener(
+    "keydown",
+    function(event) {
 
-updateCart();
+        if (
+            event.key === "Enter" &&
+            !document
+                .getElementById("loginPage")
+                .classList.contains("hidden")
+        ) {
+
+            login();
+
+        }
+
+    }
+);
+
+
+/* =========================================================
+   START APPLICATION
+========================================================= */
+
+checkLogin();
