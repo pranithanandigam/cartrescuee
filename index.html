@@ -5,312 +5,96 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cart Rescue</title>
     <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet"
-          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 </head>
 
 <body>
 
-<!-- ================= LOGIN PAGE ================= -->
+<header>
+    <div class="logo">🛒 Cart Rescue</div>
 
-<div id="loginPage" class="login-page">
+    <input
+        type="text"
+        id="searchBox"
+        placeholder="Search dresses, kurti, t-shirts, sunglasses..."
+    >
 
-    <div class="login-card">
+    <button onclick="openCart()" class="header-btn">
+        🛒 Cart <span id="cartCount">0</span>
+    </button>
 
-        <div class="login-logo">
-            <i class="fa-solid fa-cart-shopping"></i>
-        </div>
+    <button onclick="openAddress()" class="header-btn">
+        📍 Address
+    </button>
 
-        <h1>Cart Rescue</h1>
+    <button onclick="logout()" class="logout-btn">
+        Logout
+    </button>
+</header>
 
-        <p class="login-subtitle">
-            Your smart shopping destination
-        </p>
 
-        <div class="input-box">
-            <i class="fa-solid fa-user"></i>
-            <input type="text"
-                   id="loginUsername"
-                   placeholder="Username">
-        </div>
+<!-- CATEGORY BUTTONS -->
 
-        <div class="input-box">
-            <i class="fa-solid fa-lock"></i>
-            <input type="password"
-                   id="loginPassword"
-                   placeholder="Password">
-        </div>
+<nav>
 
-        <button class="login-btn" onclick="login()">
-            <i class="fa-solid fa-right-to-bracket"></i>
-            Login
-        </button>
+    <button onclick="showAll()">All</button>
 
-        <p class="login-info">
-            Demo login: <b>admin</b> / <b>1234</b>
-        </p>
+    <button onclick="showCategory('Women')">
+        👗 Women
+    </button>
 
-        <p id="loginError" class="login-error"></p>
+    <button onclick="showCategory('Men')">
+        👕 Men
+    </button>
+
+    <button onclick="showCategory('Accessories')">
+        🕶️ Accessories
+    </button>
+
+</nav>
+
+
+<main>
+
+    <h1>Fashion & Accessories</h1>
+
+    <div id="products" class="products"></div>
+
+</main>
+
+
+<!-- CART -->
+
+<div id="cartBox" class="side-box">
+
+    <div class="box-header">
+
+        <h2>🛒 My Cart</h2>
+
+        <button onclick="closeCart()">✕</button>
 
     </div>
 
-</div>
+    <div id="cartItems"></div>
 
-
-<!-- ================= SHOP PAGE ================= -->
-
-<div id="shopPage" class="hidden">
-
-    <!-- HEADER -->
-
-    <header class="header">
-
-        <div class="logo">
-            <i class="fa-solid fa-cart-shopping"></i>
-            <span>Cart Rescue</span>
-        </div>
-
-        <div class="search-box">
-
-            <input type="text"
-                   id="searchInput"
-                   placeholder="Search products..."
-                   oninput="searchProducts()">
-
-            <button onclick="searchProducts()">
-                <i class="fa-solid fa-magnifying-glass"></i>
-            </button>
-
-        </div>
-
-        <div class="header-actions">
-
-            <button class="cart-top"
-                    onclick="openCart()">
-
-                <i class="fa-solid fa-cart-shopping"></i>
-
-                Cart
-
-                <span id="cartCount">0</span>
-
-            </button>
-
-
-            <button class="profile-btn"
-                    onclick="toggleProfile()">
-
-                <i class="fa-solid fa-circle-user"></i>
-
-                <span id="usernameDisplay">
-                    User
-                </span>
-
-            </button>
-
-        </div>
-
-    </header>
-
-
-    <!-- PROFILE MENU -->
-
-    <div id="profileMenu" class="profile-menu">
-
-        <div class="profile-heading">
-
-            <i class="fa-solid fa-circle-user"></i>
-
-            <div>
-                <strong id="profileName">
-                    User
-                </strong>
-
-                <small>
-                    My Account
-                </small>
-            </div>
-
-        </div>
-
-
-        <button onclick="openSavedAddress()">
-
-            <i class="fa-solid fa-location-dot"></i>
-
-            Saved Address
-
-        </button>
-
-
-        <button onclick="openTracking()">
-
-            <i class="fa-solid fa-truck"></i>
-
-            Track Order
-
-        </button>
-
-
-        <button>
-
-            <i class="fa-solid fa-heart"></i>
-
-            Wishlist
-
-        </button>
-
-
-        <button>
-
-            <i class="fa-solid fa-gear"></i>
-
-            Settings
-
-        </button>
-
-
-        <!-- WORKING LOGOUT -->
-
-        <button class="logout-btn"
-                onclick="logout()">
-
-            <i class="fa-solid fa-right-from-bracket"></i>
-
-            Logout
-
-        </button>
-
-    </div>
-
-
-    <!-- CATEGORY BAR -->
-
-    <div class="category-bar">
-
-        <button class="category active"
-                onclick="filterCategory('All', this)">
-            All
-        </button>
-
-        <button class="category"
-                onclick="filterCategory('Electronics', this)">
-            Electronics
-        </button>
-
-        <button class="category"
-                onclick="filterCategory('Fashion', this)">
-            Fashion
-        </button>
-
-        <button class="category"
-                onclick="filterCategory('Accessories', this)">
-            Accessories
-        </button>
-
-    </div>
-
-
-    <!-- PRODUCTS -->
-
-    <main>
-
-        <h2 class="section-title">
-            Featured Products
-        </h2>
-
-        <div id="productGrid"
-             class="product-grid">
-        </div>
-
-    </main>
-
-</div>
-
-
-<!-- ================= CART ================= -->
-
-<div id="cartOverlay"
-     class="overlay"
-     onclick="closeCart()">
-</div>
-
-
-<div id="cartSidebar"
-     class="cart-sidebar">
-
-    <div class="cart-header">
+    <div class="cart-footer">
 
         <h2>
-            <i class="fa-solid fa-cart-shopping"></i>
-            Your Cart
+            Total:
+            ₹<span id="cartTotal">0</span>
         </h2>
 
-        <button onclick="closeCart()">
-            <i class="fa-solid fa-xmark"></i>
+        <button
+            class="order-btn"
+            onclick="openAddress()"
+        >
+            Proceed to Order
         </button>
 
-    </div>
-
-
-    <div id="cartItems"
-         class="cart-items">
-    </div>
-
-
-    <div class="cart-bottom">
-
-        <div class="price-row">
-
-            <span>Subtotal</span>
-
-            <span id="subtotal">
-                ₹0
-            </span>
-
-        </div>
-
-
-        <div class="price-row discount-row">
-
-            <span>Discount (10%)</span>
-
-            <span id="discount">
-                ₹0
-            </span>
-
-        </div>
-
-
-        <hr>
-
-
-        <div class="total-row">
-
-            <strong>Total</strong>
-
-            <strong id="total">
-                ₹0
-            </strong>
-
-        </div>
-
-
-        <button class="checkout-btn"
-                onclick="startCheckout()">
-
-            <i class="fa-solid fa-credit-card"></i>
-
-            Checkout
-
-        </button>
-
-
-        <button class="clear-btn"
-                onclick="clearCart()">
-
+        <button
+            class="clear-btn"
+            onclick="clearCart()"
+        >
             Clear Cart
-
         </button>
 
     </div>
@@ -318,708 +102,180 @@
 </div>
 
 
-<!-- ================= CHECKOUT ================= -->
+<!-- ADDRESS / ORDER -->
 
-<div id="checkoutModal"
-     class="modal">
+<div id="addressModal" class="modal">
 
-    <div class="checkout-box">
+    <div class="modal-content">
 
-        <div class="modal-header">
+        <button
+            class="close-btn"
+            onclick="closeAddress()"
+        >
+            ✕
+        </button>
 
-            <div>
-                <h2>
-                    Checkout
-                </h2>
+        <h2>📍 Delivery Address</h2>
 
-                <p>
-                    Delivery & Payment Details
-                </p>
-            </div>
+        <form id="addressForm">
 
-            <button onclick="closeCheckout()">
-                <i class="fa-solid fa-xmark"></i>
+            <label>Full Name</label>
+
+            <input
+                type="text"
+                id="fullName"
+                placeholder="Enter full name"
+                required
+            >
+
+
+            <label>Phone Number</label>
+
+            <input
+                type="tel"
+                id="phone"
+                placeholder="Enter phone number"
+                maxlength="10"
+                required
+            >
+
+
+            <label>Door / House Number</label>
+
+            <input
+                type="text"
+                id="doorNo"
+                placeholder="Example: 3-30"
+                required
+            >
+
+
+            <label>Street</label>
+
+            <input
+                type="text"
+                id="street"
+                placeholder="Enter street"
+                required
+            >
+
+
+            <label>Area</label>
+
+            <input
+                type="text"
+                id="area"
+                placeholder="Enter area"
+                required
+            >
+
+
+            <label>City</label>
+
+            <input
+                type="text"
+                id="city"
+                placeholder="Enter city"
+                required
+            >
+
+
+            <label>State</label>
+
+            <select id="state" required>
+
+                <option value="">
+                    Select State
+                </option>
+
+                <option value="Andhra Pradesh">
+                    Andhra Pradesh
+                </option>
+
+                <option value="Telangana">
+                    Telangana
+                </option>
+
+                <option value="Tamil Nadu">
+                    Tamil Nadu
+                </option>
+
+                <option value="Karnataka">
+                    Karnataka
+                </option>
+
+                <option value="Kerala">
+                    Kerala
+                </option>
+
+            </select>
+
+
+            <label>Pincode</label>
+
+            <input
+                type="text"
+                id="pincode"
+                placeholder="Enter 6 digit pincode"
+                maxlength="6"
+                required
+            >
+
+
+            <label>Payment Method</label>
+
+            <select id="payment" required>
+
+                <option value="">
+                    Select Payment Method
+                </option>
+
+                <option value="Cash on Delivery">
+                    Cash on Delivery
+                </option>
+
+                <option value="UPI">
+                    UPI
+                </option>
+
+                <option value="Debit / Credit Card">
+                    Debit / Credit Card
+                </option>
+
+            </select>
+
+
+            <button
+                type="submit"
+                class="place-order"
+            >
+                📦 Confirm Order
             </button>
 
-        </div>
-
-
-        <div class="checkout-content">
-
-
-            <!-- ADDRESS -->
-
-            <div class="section">
-
-                <h3>
-                    <i class="fa-solid fa-location-dot"></i>
-                    Delivery Address
-                </h3>
-
-
-                <div class="form-row">
-
-                    <div class="form-group">
-
-                        <label>
-                            Full Name *
-                        </label>
-
-                        <input type="text"
-                               id="fullName"
-                               placeholder="Enter full name">
-
-                    </div>
-
-
-                    <div class="form-group">
-
-                        <label>
-                            Phone Number *
-                        </label>
-
-                        <input type="text"
-                               id="phone"
-                               maxlength="10"
-                               placeholder="10 digit phone number">
-
-                    </div>
-
-                </div>
-
-
-                <div class="form-group">
-
-                    <label>
-                        Door / Flat Number *
-                    </label>
-
-                    <input type="text"
-                           id="doorNo"
-                           placeholder="Example: 12-34/A">
-
-                </div>
-
-
-                <div class="form-group">
-
-                    <label>
-                        Street / Area *
-                    </label>
-
-                    <input type="text"
-                           id="street"
-                           placeholder="Street / Area">
-
-                </div>
-
-
-                <div class="form-row">
-
-                    <div class="form-group">
-
-                        <label>
-                            City *
-                        </label>
-
-                        <input type="text"
-                               id="city"
-                               placeholder="City">
-
-                    </div>
-
-
-                    <div class="form-group">
-
-                        <label>
-                            State *
-                        </label>
-
-                        <input type="text"
-                               id="state"
-                               placeholder="State">
-
-                    </div>
-
-                </div>
-
-
-                <div class="form-row">
-
-                    <div class="form-group">
-
-                        <label>
-                            PIN Code *
-                        </label>
-
-                        <input type="text"
-                               id="pincode"
-                               maxlength="6"
-                               placeholder="6 digit PIN">
-
-                    </div>
-
-
-                    <div class="form-group">
-
-                        <label>
-                            Landmark
-                        </label>
-
-                        <input type="text"
-                               id="landmark"
-                               placeholder="Nearby landmark">
-
-                    </div>
-
-                </div>
-
-
-                <label class="normal-label">
-                    Address Type
-                </label>
-
-                <div class="radio-group">
-
-                    <label>
-                        <input type="radio"
-                               name="addressType"
-                               value="Home"
-                               checked>
-                        🏠 Home
-                    </label>
-
-                    <label>
-                        <input type="radio"
-                               name="addressType"
-                               value="Work">
-                        🏢 Work
-                    </label>
-
-                </div>
-
-            </div>
-
-
-            <!-- DELIVERY -->
-
-            <div class="section">
-
-                <h3>
-                    <i class="fa-solid fa-truck"></i>
-                    Delivery Options
-                </h3>
-
-
-                <label class="delivery-option">
-
-                    <input type="radio"
-                           name="delivery"
-                           value="Standard Delivery"
-                           data-charge="0"
-                           checked
-                           onchange="updateCheckoutTotal()">
-
-                    <div>
-                        <strong>
-                            Standard Delivery
-                        </strong>
-
-                        <small>
-                            3 - 5 business days
-                        </small>
-                    </div>
-
-                    <span>
-                        FREE
-                    </span>
-
-                </label>
-
-
-                <label class="delivery-option">
-
-                    <input type="radio"
-                           name="delivery"
-                           value="Express Delivery"
-                           data-charge="99"
-                           onchange="updateCheckoutTotal()">
-
-                    <div>
-                        <strong>
-                            Express Delivery
-                        </strong>
-
-                        <small>
-                            1 - 2 business days
-                        </small>
-                    </div>
-
-                    <span>
-                        ₹99
-                    </span>
-
-                </label>
-
-
-                <label class="delivery-option">
-
-                    <input type="radio"
-                           name="delivery"
-                           value="Same Day Delivery"
-                           data-charge="149"
-                           onchange="updateCheckoutTotal()">
-
-                    <div>
-                        <strong>
-                            Same Day Delivery
-                        </strong>
-
-                        <small>
-                            Delivery today
-                        </small>
-                    </div>
-
-                    <span>
-                        ₹149
-                    </span>
-
-                </label>
-
-            </div>
-
-
-            <!-- PAYMENT -->
-
-            <div class="section">
-
-                <h3>
-                    <i class="fa-solid fa-credit-card"></i>
-                    Payment Method
-                </h3>
-
-
-                <div class="payment-grid">
-
-                    <label class="payment-option">
-
-                        <input type="radio"
-                               name="payment"
-                               value="Cash on Delivery"
-                               checked>
-
-                        <i class="fa-solid fa-money-bill"></i>
-
-                        <span>
-                            Cash on Delivery
-                        </span>
-
-                    </label>
-
-
-                    <label class="payment-option">
-
-                        <input type="radio"
-                               name="payment"
-                               value="UPI">
-
-                        <i class="fa-solid fa-mobile-screen"></i>
-
-                        <span>
-                            UPI
-                        </span>
-
-                    </label>
-
-
-                    <label class="payment-option">
-
-                        <input type="radio"
-                               name="payment"
-                               value="Card">
-
-                        <i class="fa-solid fa-credit-card"></i>
-
-                        <span>
-                            Card
-                        </span>
-
-                    </label>
-
-                </div>
-
-            </div>
-
-
-            <!-- SUMMARY -->
-
-            <div class="section">
-
-                <h3>
-                    <i class="fa-solid fa-receipt"></i>
-                    Order Summary
-                </h3>
-
-
-                <div class="summary-row">
-
-                    <span>
-                        Subtotal
-                    </span>
-
-                    <span id="checkoutSubtotal">
-                        ₹0
-                    </span>
-
-                </div>
-
-
-                <div class="summary-row">
-
-                    <span>
-                        Discount
-                    </span>
-
-                    <span id="checkoutDiscount">
-                        ₹0
-                    </span>
-
-                </div>
-
-
-                <div class="summary-row">
-
-                    <span>
-                        Delivery
-                    </span>
-
-                    <span id="deliveryCharge">
-                        FREE
-                    </span>
-
-                </div>
-
-
-                <hr>
-
-
-                <div class="checkout-total">
-
-                    <strong>
-                        Total
-                    </strong>
-
-                    <strong id="checkoutTotal">
-                        ₹0
-                    </strong>
-
-                </div>
-
-            </div>
-
-
-            <button class="place-order-btn"
-                    onclick="confirmOrder()">
-
-                <i class="fa-solid fa-circle-check"></i>
-
-                Confirm & Place Order
-
-            </button>
-
-        </div>
+        </form>
 
     </div>
 
 </div>
 
 
-<!-- ================= ORDER SUCCESS ================= -->
+<!-- REMINDER -->
 
-<div id="successModal"
-     class="modal">
+<div id="reminderPopup" class="reminder">
 
-    <div class="success-box">
+    <div class="reminder-content">
 
-        <div class="success-icon">
-            <i class="fa-solid fa-check"></i>
+        <div class="reminder-icon">
+            🔔
         </div>
 
+        <h2>Cart Reminder</h2>
 
-        <h2>
-            Order Placed Successfully!
-        </h2>
+        <p id="reminderText"></p>
 
-
-        <p>
-            Thank you for shopping with Cart Rescue.
-        </p>
-
-
-        <div class="success-details">
-
-            <div>
-
-                <span>
-                    Order ID
-                </span>
-
-                <strong id="orderId">
-                    -
-                </strong>
-
-            </div>
-
-
-            <div>
-
-                <span>
-                    Total Amount
-                </span>
-
-                <strong id="successTotal">
-                    ₹0
-                </strong>
-
-            </div>
-
-
-            <div>
-
-                <span>
-                    Expected Delivery
-                </span>
-
-                <strong id="expectedDate">
-                    -
-                </strong>
-
-            </div>
-
-        </div>
-
-
-        <div class="success-address">
-
-            <strong>
-                📍 Delivery Address
-            </strong>
-
-            <p id="successAddress">
-            </p>
-
-        </div>
-
-
-        <div class="success-buttons">
-
-            <button onclick="closeSuccess()">
-                Continue Shopping
-            </button>
-
-            <button onclick="closeSuccess(); openTracking()">
-                Track Order
-            </button>
-
-        </div>
-
-    </div>
-
-</div>
-
-
-<!-- ================= TRACKING ================= -->
-
-<div id="trackingModal"
-     class="modal">
-
-    <div class="tracking-box">
-
-        <div class="modal-header">
-
-            <div>
-
-                <h2>
-                    📦 Track Order
-                </h2>
-
-                <p id="trackingOrderId">
-                    Order #-
-                </p>
-
-            </div>
-
-
-            <button onclick="closeTracking()">
-
-                <i class="fa-solid fa-xmark"></i>
-
-            </button>
-
-        </div>
-
-
-        <div class="tracking-content">
-
-            <div class="tracking-summary">
-
-                <strong id="trackingProduct">
-                    Your Order
-                </strong>
-
-                <span id="trackingAmount">
-                    ₹0
-                </span>
-
-            </div>
-
-
-            <div class="timeline">
-
-
-                <div class="timeline-item completed">
-
-                    <div class="timeline-icon">
-                        ✓
-                    </div>
-
-                    <div>
-
-                        <h4>
-                            Order Placed
-                        </h4>
-
-                        <p>
-                            Your order has been placed.
-                        </p>
-
-                    </div>
-
-                </div>
-
-
-                <div class="timeline-line completed-line"></div>
-
-
-                <div class="timeline-item completed">
-
-                    <div class="timeline-icon">
-                        ✓
-                    </div>
-
-                    <div>
-
-                        <h4>
-                            Order Confirmed
-                        </h4>
-
-                        <p>
-                            Your order has been confirmed.
-                        </p>
-
-                    </div>
-
-                </div>
-
-
-                <div class="timeline-line completed-line"></div>
-
-
-                <div class="timeline-item active">
-
-                    <div class="timeline-icon">
-                        🚚
-                    </div>
-
-                    <div>
-
-                        <h4>
-                            Shipped
-                        </h4>
-
-                        <p>
-                            Your package is on the way.
-                        </p>
-
-                    </div>
-
-                </div>
-
-
-                <div class="timeline-line"></div>
-
-
-                <div class="timeline-item">
-
-                    <div class="timeline-icon">
-                        4
-                    </div>
-
-                    <div>
-
-                        <h4>
-                            Out for Delivery
-                        </h4>
-
-                        <p>
-                            Your package will be delivered soon.
-                        </p>
-
-                    </div>
-
-                </div>
-
-
-                <div class="timeline-line"></div>
-
-
-                <div class="timeline-item">
-
-                    <div class="timeline-icon">
-                        5
-                    </div>
-
-                    <div>
-
-                        <h4>
-                            Delivered
-                        </h4>
-
-                        <p>
-                            Your order will be delivered.
-                        </p>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-
-            <div class="tracking-address">
-
-                <h3>
-                    📍 Delivery Address
-                </h3>
-
-                <p id="trackingAddress">
-                    No address saved.
-                </p>
-
-            </div>
-
-
-            <div class="delivery-date-box">
-
-                🚚 Expected Delivery:
-
-                <strong id="trackingDate">
-                    -
-                </strong>
-
-            </div>
-
-        </div>
+        <button onclick="closeReminder()">
+            Continue Shopping
+        </button>
 
     </div>
 
